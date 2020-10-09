@@ -1,0 +1,6 @@
+[Unit]
+PartOf=qubes-session.target
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/usr/lib/qubes/icon-receiver

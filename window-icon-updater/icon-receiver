@@ -28,7 +28,9 @@ import asyncio
 import argparse
 from qubesimgconverter import ICON_MAXSIZE, Image
 import logging
+import socket
 
+import systemd.daemon
 import xcffib as xcb
 import xcffib.xproto as xproto
 from qubesadmin import Qubes
@@ -332,10 +334,18 @@ class IconReceiver(object):
         self.icon_cache = self.icon_cache[:5]
 
     async def handle_clients(self, socket_path=SOCKET_PATH):
-        if os.path.exists(socket_path):
-            os.unlink(socket_path)
-        server = await asyncio.start_unix_server(
-            self.handle_client, socket_path)
+        if systemd.daemon.booted():
+            fds = systemd.daemon.listen_fds()
+            if fds:
+                sock = socket.fromfd(fds[0], socket.AF_UNIX,
+                    socket.SOCK_STREAM)
+                server = await asyncio.start_unix_server(
+                self.handle_client, sock=sock)
+        if not server:
+            if os.path.exists(socket_path):
+                os.unlink(socket_path)
+            server = await asyncio.start_unix_server(
+                self.handle_client, socket_path)
         await server.serve_forever()
 
     async def handle_client(self, reader, writer):

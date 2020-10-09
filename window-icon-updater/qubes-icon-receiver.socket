@@ -1,0 +1,6 @@
+[Socket]
+ListenStream=/run/qubes/icon-receiver.sock
+PartOf=qubes-session.target
+
+[Install]
+WantedBy=qubes-session.target

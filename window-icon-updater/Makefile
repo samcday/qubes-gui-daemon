@@ -8,3 +8,5 @@ install:
 	install -d $(DESTDIR)/etc/qubes/rpc-config
 	install -m 0664 -D qubes.WindowIconUpdater.config $(DESTDIR)/etc/qubes/rpc-config/qubes.WindowIconUpdater
 	install -m 0664 -D qubes-icon-receiver.desktop $(DESTDIR)/etc/xdg/autostart/qubes-icon-receiver.desktop
+	install -m 0644 -D qubes-icon-receiver.service $(DESTDIR)/usr/lib/systemd/system/qubes-icon-receiver.service
+	install -m 0644 -D qubes-icon-receiver.socket $(DESTDIR)/usr/lib/systemd/system/qubes-icon-receiver.socket
